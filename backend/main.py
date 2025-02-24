@@ -8,7 +8,7 @@ origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://127.0.0.1",
-    "" # prod url (/を消す！)
+    "https://meal-tracker-omega.vercel.app" # prod url (/を消す！)
 ]
 
 # Add CORS middleware
