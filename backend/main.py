@@ -5,7 +5,6 @@ from database import engine, get_db
 from sqlalchemy.orm import Session
 import schemas
 import models
-import database
 
 app = FastAPI()
 
@@ -44,8 +43,3 @@ def create_meal(meal: schemas.MealRequest, db: Session = Depends(get_db)):
     db.commit() # 情報を保存
     db.refresh(db_meal) # 保存したばかりの情報をもう一度確認
     return db_meal
-
-
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=8000)

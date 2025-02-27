@@ -7,17 +7,7 @@ import os
 # Load environment variables
 load_dotenv()
 
-# Get the database URL
-ENVIRONMENT = os.getenv("ENVIRONMENT")
-DATABASE_PROD_URL = os.getenv("DATABASE_PROD_URL")
-DATABASE_LOCAL_URL = os.getenv("DATABASE_LOCAL_URL")
-
-if os.getenv("ENVIRONMENT") == "production":
-    DATABASE_URL = DATABASE_PROD_URL
-else:
-    DATABASE_URL = DATABASE_LOCAL_URL
-
-# Create the database engine = データベースに接続するための「エンジン(電話)」
+DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 
 # Create a session factory = データベースとお話しする「セッション」（会話）を作る

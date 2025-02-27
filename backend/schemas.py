@@ -7,9 +7,9 @@ class MealRequest(BaseModel):
     meal: str
     energy: Decimal
     cost: Decimal
-    # fat: Decimal
-    # carbs: Decimal
-    # protein: Decimal
+    fat: Decimal
+    carbs: Decimal
+    protein: Decimal
 
 class MealResponse(BaseModel):
     id: int
