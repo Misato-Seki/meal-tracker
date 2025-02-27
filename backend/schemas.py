@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from decimal import Decimal
 from datetime import date
+from uuid import uuid4 as uuid
 
 class MealRequest(BaseModel):
     date: date
@@ -12,7 +13,7 @@ class MealRequest(BaseModel):
     # protein: Decimal
 
 class MealResponse(BaseModel):
-    id: int
+    id: uuid
 
     class Config:
         from_attributes = True
