@@ -5,10 +5,14 @@ from database import engine, get_db
 from sqlalchemy.orm import Session
 import schemas
 import models
+<<<<<<< HEAD
+=======
+import database
+>>>>>>> main
 
 app = FastAPI()
 
-# CORS settings
+# CORS settings = アプリにアクセスしてもいい場所のリスト
 origins = [
     "http://localhost",
     "http://localhost:3000",
@@ -16,7 +20,7 @@ origins = [
     "https://meal-tracker-omega.vercel.app" # prod url (/を消す！)
 ]
 
-# Add CORS middleware
+# Add CORS middleware = このアプリは、上のリストにある場所からなら自由にアクセスしてもOKというルールを設定
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
