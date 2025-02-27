@@ -8,6 +8,7 @@ import os
 load_dotenv()
 
 # Get the database URL
+ENVIRONMENT = os.getenv("ENVIRONMENT")
 DATABASE_PROD_URL = os.getenv("DATABASE_PROD_URL")
 DATABASE_LOCAL_URL = os.getenv("DATABASE_LOCAL_URL")
 
