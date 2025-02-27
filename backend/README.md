@@ -15,3 +15,8 @@ alembic revision --autogenerate -m "Initial migration"
 ```zsh
 alembic upgrade head
 ```
+
+***requirements.txt***
+```zsh
+pip freeze > requirements.txt
+```
