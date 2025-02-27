@@ -5,10 +5,6 @@ from database import engine, get_db
 from sqlalchemy.orm import Session
 import schemas
 import models
-<<<<<<< HEAD
-=======
-import database
->>>>>>> main
 
 app = FastAPI()
 
