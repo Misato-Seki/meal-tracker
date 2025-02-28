@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 
 type RequestProps = {
     date: string;
@@ -27,6 +28,9 @@ export default function Page() {
         carbs: 0,
         protein: 0
     })
+    const [open, setOpen] = useState(false);
+    const [status, setStatus] = useState<string | null>(null);
+
 
     // POST method
     const handleSubmit = () => {
@@ -37,10 +41,39 @@ export default function Page() {
             },
             body: JSON.stringify(requestData),
         })
-        .then((res) => res.json())
+        .then((res) => {
+            if(res.ok){
+                setStatus("success")
+            } else {
+                setStatus("error")
+            }
+            return res.json()
+        })
         .then((data) => console.log(data))
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            setStatus("error")
+            console.log(err)
+        })
+        .finally(() => {
+            handleClick();
+        })
     }
+
+    // Handle Snackbar
+    const handleClick = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = (
+        event: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+      ) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
 
     return (
         <div className="flex flex-col items-center justify-center gap-5 m-5">
@@ -111,6 +144,12 @@ export default function Page() {
                     />
                 {/* </div> */}
                 <Button onClick={handleSubmit} variant="contained">Submit</Button>
+                <Snackbar
+                    open={open}
+                    autoHideDuration={5000}
+                    onClose={handleClose}
+                    message={status === "success" ? "Success to Record" : "Something went wrong"}
+                />
             </form>
         </div>
     );
