@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 import models as MealModel
 from database import engine, get_db
@@ -33,7 +33,7 @@ def read_root():
 @app.get("/meals")
 # db という名前の引数は Session という型. Session は、データベースとやり取りするための「通路」みたいなもの.
 # Depends() を使うと：FastAPIが 自動的に get_db() を呼び出して、db に接続した Session を渡してくれる.
-def get_meal(db: Session = Depends(get_db)):
+def get_meal(db: Session = Depends(get_db), date: date = Query(None)):
     """
     Retrieve all meal entries from the database.
 
@@ -43,7 +43,10 @@ def get_meal(db: Session = Depends(get_db)):
     Returns:
         List[Meal]: A list of Meal objects containing all meals in the database.
     """
-    meals = db.query(MealModel.Meal).all()
+    if date:
+        meals = db.query(MealModel.Meal).filter(models.Meal.date == date).all()
+    else:
+        meals = db.query(MealModel.Meal).all()
     return meals
 
 @app.post("/meals", response_model=schemas.MealResponse)
