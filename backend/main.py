@@ -67,7 +67,6 @@ def create_meal(meal: schemas.MealRequest, db: Session = Depends(get_db)):
     db.refresh(db_meal) # 保存したばかりの情報をもう一度確認
     return db_meal
 
-
 @app.get("/summary")
 def get_summary(db: Session = Depends(get_db)):
     """
@@ -87,3 +86,66 @@ def get_summary(db: Session = Depends(get_db)):
         "total_energy": total_energy,
         "total_cost": total_cost
     }
+
+@app.put("/meals/{id}", response_model = schemas.MealResponse)
+def put_meal(meal: schemas.MealRequest, id: int, db: Session = Depends(get_db)):
+    """
+    Update an existing meal entry in the database.
+
+    Args:
+        db: A Session object to interact with the database.
+        meal: A MealRequest object containing the new date, meal name, energy, cost, fat, carbs, and protein of the meal.
+        id: The id of the meal to be updated.
+
+    Returns:
+        MealResponse: A MealResponse object containing the id and other information of the updated meal.
+    """
+    meal_in_db = db.query(models.Meal).filter(models.Meal.id == id).first()
+    if not meal_in_db:
+        raise HTTPException(status_code=404, detail="Meal not found")
+    else:
+        meal_in_db.datae = meal.date
+        meal_in_db.meal = meal.meal
+        meal_in_db.energy = meal.energy
+        meal_in_db.cost = meal.cost
+        meal_in_db.fat = meal.fat
+        meal_in_db.carbs = meal.carbs
+        meal_in_db.protein = meal.protein
+        db.add(meal_in_db)
+        db.commit()
+        db.refresh(meal_in_db)
+        return meal_in_db
+    
+@app.delete("/meals/{id}")
+def delete_meal(id: int, db: Session = Depends(get_db)):
+    """
+    Delete an existing meal entry from the database.
+
+    Args:
+        db: A Session object to interact with the database.
+        id: The id of the meal to be deleted.
+
+    Returns:
+        Dict[str, str]: A dictionary containing the message "Item deleted successfully"
+    """
+    db_meal = db.query(models.Meal).filter(models.Meal.id == id).first()
+    db.delete(db_meal)
+    db.commit()
+    return {"message": "Item deleted successfully"}
+
+@app.get("/meals/{id}")
+# db という名前の引数は Session という型. Session は、データベースとやり取りするための「通路」みたいなもの.
+# Depends() を使うと：FastAPIが 自動的に get_db() を呼び出して、db に接続した Session を渡してくれる.
+def get_meal(id: int, db: Session = Depends(get_db)):
+    """
+    Retrieve a specific meal entry from the database by its ID.
+
+    Args:
+        id: The ID of the meal to retrieve.
+        db: A Session object that provides a connection to the database.
+
+    Returns:
+        List[Meal]: A list containing the meal object with the specified ID.
+    """
+    meals = db.query(MealModel.Meal).filter(models.Meal.id == id).first()
+    return meals

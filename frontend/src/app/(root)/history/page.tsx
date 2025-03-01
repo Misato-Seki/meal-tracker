@@ -15,6 +15,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 
+import { useRouter } from "next/navigation";
+
 type ResponseProps = {
   cost: number;
   date: string;
@@ -26,6 +28,7 @@ type ResponseProps = {
   carbs: number;
 }
 export default function Page() {
+  const router = useRouter();
   const [mealData, setMealData] = useState<ResponseProps[]>();
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
@@ -66,7 +69,7 @@ export default function Page() {
             </TableHead>
             <TableBody>
               {mealData.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item.id} onClick={() => router.push(`/record/${item.id}`)} className="hover:bg-gray-100 cursor-pointer">
                   <TableCell component="th" scope="row">
                     {item.date}
                   </TableCell>
