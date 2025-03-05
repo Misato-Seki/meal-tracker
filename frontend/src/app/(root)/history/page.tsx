@@ -29,16 +29,27 @@ type ResponseProps = {
 }
 export default function Page() {
   const router = useRouter();
-  const [mealData, setMealData] = useState<ResponseProps[]>();
+  const [mealData, setMealData] = useState<ResponseProps[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   )
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>("");
 
   useEffect(() => {
+    setIsLoading(true)
+    setError(null)
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/meals?date=${selectedDate}`)
       .then((res) => res.json())
-      .then((data) => setMealData(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        setMealData(data)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setError("Failed to fetch data.")
+        console.log(err)
+        setIsLoading(false)
+      });
   }, [selectedDate]);
 
 
@@ -56,6 +67,8 @@ export default function Page() {
               }}
           />
       </LocalizationProvider>
+      {isLoading && !error && <div>Loading...</div>}
+      {error && <div className="text-red-500">{error}</div>}
       {mealData && mealData.length > 0 ? (
         <TableContainer className="flex justify-center items-center">
           <Table sx={{ minWidth: 375, maxWidth: 600 }} aria-label="simple table">
